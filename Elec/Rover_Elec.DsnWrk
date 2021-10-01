@@ -1,0 +1,6 @@
+[ProjectGroup]
+Version=1.0
+[Project1]
+ProjectPath=Rover_Alim\Rover_Alim.PrjPcb
+[Project2]
+ProjectPath=Rover_Sensor\Rover_Sensor.PrjPcb

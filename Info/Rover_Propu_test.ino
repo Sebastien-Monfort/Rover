@@ -124,7 +124,7 @@ void set_servo_dir(int A, int B, int C, int D) {
   Servo_Gauche_Avant.write(D+Servo_Offset_GAv);
   Servo_Gauche_Arriere.write(C+Servo_Offset_GAr);
   //waiting for the servos to turn
-  int previoustime=millis();        //waiting for period ms while beeing able to read the buffer looking for x; 
+  long previoustime=millis();        //waiting for period ms while beeing able to read the buffer looking for x; 
     while(millis()-previoustime < 500) {
       if(Serial.available()>0) {
         String text2;
@@ -158,7 +158,7 @@ void accelerate_motors(int time, int v_max) {//time : duration of the accelerati
     analogWrite(Mot_EN_DAr, i);
     analogWrite(Mot_EN_GAr, i);
     
-    int previoustime=millis();        //waiting for period ms while beeing able to read the buffer looking for x; 
+    long previoustime=millis();        //waiting for period ms while beeing able to read the buffer looking for x; 
     while(millis()-previoustime < period) {
       if(Serial.available()>0) {
         String text2;
@@ -193,7 +193,7 @@ void stop_motors(int time, int v_max) {//time : duration of the acceleration in 
     analogWrite(Mot_EN_DAr, i);
     analogWrite(Mot_EN_GAr, i);
     
-    int previoustime=millis();        //waiting for period ms while beeing able to read the buffer looking for x; 
+    long previoustime=millis();        //waiting for period ms while beeing able to read the buffer looking for x; 
     while(millis()-previoustime < period) {
       if(Serial.available()>0) {
         String text;
@@ -280,7 +280,7 @@ void rolling_straight(int dir) {
   
   Serial.println("      *Rolling");
   //waiting for the duration and allowing a shutdowb
-  int previoustime=millis();
+  long previoustime=millis();
   while(millis()-previoustime < duration) {
     if(Serial.available()>0) {
       text2=Serial.readStringUntil(';');
@@ -433,7 +433,7 @@ void turn_roll(char dir) {
   
   Serial.println("      *Rolling");
   //waiting for the duration and allowing a shutdowb
-  int previoustime=millis();
+  long previoustime=millis();
   while(millis()-previoustime < duration) {
     if(Serial.available()>0) {
       text=Serial.readStringUntil(';');

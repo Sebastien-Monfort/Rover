@@ -12,9 +12,10 @@ fwdStr = "forward;"
 backwdStr = "backward;"
 leftStr = "left_turn;"
 rightStr = "right_turn;"
+stopStr = "x;"
 
 arduinoPort = "/dev/ttyACM0"
-#arduino = serial.Serial(port = arduinoPort, baudrate = 9600, timeout = 0.1)
+arduino = serial.Serial(port = arduinoPort, baudrate = 9600, timeout = 0.1)
 
 
 class MainWindow(Gtk.Window):
@@ -39,7 +40,8 @@ class MainWindow(Gtk.Window):
         self.backwdBtn.connect("clicked", self.on_backward_clicked)
 
         self.timeEntry = Gtk.Entry()
-        #self.timeEntry.set_size_request(80,30)
+        self.timeEntry.set_size_request(80,30)
+
 
         self.leftBtn = Gtk.Button(label="Left")
         self.leftBtn.set_size_request(80, 30)
@@ -49,6 +51,10 @@ class MainWindow(Gtk.Window):
         self.rightBtn.set_size_request(80, 30)
         self.rightBtn.connect("clicked", self.on_right_clicked)
 
+        self.stopBtn= Gtk.Button(label="Stop")
+        self.stopBtn.set_size_request(80, 30)
+        self.stopBtn.connect("clicked", self.on_stop_clicked)
+
         self.serialLabel = Gtk.Label()
         GLib.timeout_add(200,self.update_serial)
         
@@ -57,6 +63,9 @@ class MainWindow(Gtk.Window):
         grid.attach_next_to(self.timeEntry, self.backwdBtn,  Gtk.PositionType.RIGHT, 1,1)
         grid.attach_next_to(self.leftBtn, self.fwdBtn, Gtk.PositionType.BOTTOM, 1, 1)
         grid.attach_next_to(self.rightBtn, self.leftBtn, Gtk.PositionType.RIGHT, 1, 1)
+        grid.attach_next_to(self.stopBtn, self.rightBtn, Gtk.PositionType.RIGHT, 1, 1)
+        grid.attach_next_to(self.serialLabel, self.leftBtn, Gtk.PositionType.BOTTOM, 3, 1)
+        
         
 
         self.set_border_width(10)
@@ -65,39 +74,35 @@ class MainWindow(Gtk.Window):
         self.connect("destroy", Gtk.main_quit)
 
     def on_forward_clicked(self, widget):
-        print(fwdStr)
-        #arduino.write(fwdStr)
+        arduino.write(fwdStr.encode())
         timeMs = self.timeEntry.get_text()+";"
-        time.sleep(1)
-        print(timeMs)
-        #arduino.write(timeMs)
+        time.sleep(0.2)
+        arduino.write(timeMs.encode())
 
     def on_backward_clicked(self,widget):
-        print(backwdStr)
-        #arduino.write(backwdStr)
-        time.sleep(1)
+        arduino.write(backwdStr.encode())
+        time.sleep(0.2)
         timeMs = self.timeEntry.get_text()+";"
-        print(timeMs)
-        #arduino.write(timeMs)
+        arduino.write(timeMs.encode())
 
     def on_left_clicked(self,widget):
-        print(leftStr)
-        #arduino.write(leftStr)
-        time.sleep(1)
+        arduino.write(leftStr.encode())
+        time.sleep(0.2)
         timems = self.timeEntry.get_text()+";"
-        print(timems)
-        #arduino.write(timems)
+        arduino.write(timems.encode())
 
     def on_right_clicked(self,widget):
-        print(rightStr)
-        #arduino.write(rightStr)
-        time.sleep(1)
+        arduino.write(rightStr.encode())
+        time.sleep(0.2)
         timems = self.timeEntry.get_text()+";"
-        print(timems)
-        #arduino.write(timems)
+        arduino.write(timems.encode())
+
+    def on_stop_clicked(self,widget):
+        arduino.write(stopStr.encode())
 
     def update_serial(self):
-        print("blop")
+        while arduino.inWaiting():
+            self.serialLabel.set_text('\n'.join(self.serialLabel.get_text().split(sep='\n')[-20:])+ arduino.readline().decode())
         return GLib.SOURCE_CONTINUE
 
 
